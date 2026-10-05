@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Castlefall — a party word game of hidden teams.">
-  <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#121119" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#fbf5ff">
   <title>Castlefall</title>
   <link rel="icon" href="logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
@@ -15,9 +14,14 @@
   <!-- Join screen -->
   <main id="join-screen" class="join" hidden>
     <div class="join-card">
-      <img class="join-logo" src="logo.svg" alt="" width="72" height="72">
+      <svg class="join-logo" viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+        <rect width="64" height="64" fill="var(--accent)"/>
+        <path d="M32 6v10" stroke="#f0c35a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M33 6.5l9 3-9 3z" fill="#f0c35a"/>
+        <path d="M14 54V26h6v5h5v-5h4v5h6v-5h4v5h5v-5h6v28H38V44a6 6 0 0 0-12 0v10z" fill="#f5f2ec"/>
+        <path d="M19 38h4v5h-4zM41 38h4v5h-4z" fill="var(--accent)"/>
+      </svg>
       <h1>Castlefall</h1>
-      <p class="tagline">Two teams. Two secret words. Nobody knows who’s with them.</p>
 
       <p id="join-error" class="join-error" role="alert" hidden></p>
 
@@ -33,12 +37,10 @@
             <input id="join-room" name="room" maxlength="40" placeholder="lobby" autocapitalize="off" spellcheck="false">
           </div>
         </label>
-        <button class="btn btn-primary btn-lg" type="submit">Join game</button>
-        <button class="btn btn-ghost" type="button" id="join-spectate">Just watch</button>
+        <button class="btn btn-primary btn-lg" type="submit">Join</button>
       </form>
 
       <p class="join-foot">
-        Everyone joins the same room, usually while sitting together in person.
         <a href="rules.html" target="_blank" rel="noopener">How to play →</a>
       </p>
     </div>
@@ -48,7 +50,13 @@
   <div id="game-screen" class="app" hidden>
     <header class="topbar">
       <a class="brand" href="rules.html" target="_blank" rel="noopener" title="How to play">
-        <img src="logo.svg" alt="" width="28" height="28">
+        <svg class="brand-logo" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+          <rect width="64" height="64" fill="var(--accent)"/>
+          <path d="M32 6v10" stroke="#f0c35a" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M33 6.5l9 3-9 3z" fill="#f0c35a"/>
+          <path d="M14 54V26h6v5h5v-5h4v5h6v-5h4v5h5v-5h6v28H38V44a6 6 0 0 0-12 0v10z" fill="#f5f2ec"/>
+          <path d="M19 38h4v5h-4zM41 38h4v5h-4z" fill="var(--accent)"/>
+        </svg>
         <span>Castlefall</span>
       </a>
       <button class="room-pill" id="share-room" title="Copy invite link">
@@ -81,14 +89,13 @@
         <section class="card" id="new-round">
           <form id="start-form" class="start-form">
             <div class="start-options">
-              <label class="field field-inline">
-                <span>Words</span>
-                <div class="stepper">
-                  <button type="button" data-step="-1" aria-label="Fewer words">−</button>
-                  <input id="start-count" inputmode="numeric" value="18" aria-label="Number of words">
-                  <button type="button" data-step="1" aria-label="More words">+</button>
+              <div class="field field-inline">
+                <span id="count-label">Words</span>
+                <div class="wheel-wrap">
+                  <div class="wheel" id="start-count" role="spinbutton" tabindex="0" aria-labelledby="count-label" title="Scroll, or tap the number to type one"></div>
+                  <input class="wheel-input" id="count-input" inputmode="numeric" aria-label="Type a number of words" hidden>
                 </div>
-              </label>
+              </div>
               <label class="field field-inline grow">
                 <span>From list</span>
                 <select id="start-list"></select>
@@ -140,6 +147,10 @@
           </div>
           <ul class="roster" id="roster"></ul>
           <p class="muted small" id="spectator-count"></p>
+          <label class="toggle">
+            <input type="checkbox" id="spectate">
+            <span>Just watch (sit out of rounds)</span>
+          </label>
           <label class="toggle">
             <input type="checkbox" id="autokick">
             <span>Remove players when they disconnect</span>

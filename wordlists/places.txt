@@ -1,0 +1,191 @@
+Paris
+London
+Rome
+Venice
+Athens
+Berlin
+Amsterdam
+Barcelona
+Lisbon
+Dublin
+Edinburgh
+Prague
+Vienna
+Budapest
+Istanbul
+Moscow
+Cairo
+Marrakech
+Nairobi
+Cape Town
+Lagos
+Dubai
+Jerusalem
+Mecca
+Tehran
+Mumbai
+Delhi
+Kathmandu
+Bangkok
+Singapore
+Hong Kong
+Shanghai
+Beijing
+Seoul
+Tokyo
+Kyoto
+Bali
+Sydney
+Melbourne
+Auckland
+Honolulu
+Los Angeles
+San Francisco
+Las Vegas
+Chicago
+New York
+Miami
+New Orleans
+Toronto
+Vancouver
+Mexico City
+Havana
+Rio de Janeiro
+Buenos Aires
+Lima
+Reykjavik
+Monaco
+Vatican City
+Hollywood
+Silicon Valley
+Wall Street
+Times Square
+Broadway
+Antarctica
+Arctic
+Sahara
+Amazon
+Himalayas
+Alps
+Andes
+Rockies
+Outback
+Siberia
+Serengeti
+Patagonia
+Scandinavia
+Transylvania
+Tuscany
+Provence
+Bavaria
+Scotland
+Ireland
+Iceland
+Greenland
+Hawaii
+Alaska
+Texas
+Florida
+California
+Tasmania
+Madagascar
+Sicily
+Crete
+Cyprus
+Jamaica
+Bermuda
+Fiji
+Galápagos
+Easter Island
+Mount Everest
+Kilimanjaro
+Mount Fuji
+Vesuvius
+Grand Canyon
+Niagara Falls
+Victoria Falls
+Great Barrier Reef
+Dead Sea
+Nile
+Mississippi
+Ganges
+Danube
+Thames
+Loch Ness
+Lake Titicaca
+Yellowstone
+Uluru
+Stonehenge
+Machu Picchu
+Petra
+Angkor Wat
+Taj Mahal
+Great Wall
+Forbidden City
+Pyramids
+Sphinx
+Colosseum
+Parthenon
+Pompeii
+Eiffel Tower
+Louvre
+Versailles
+Big Ben
+Buckingham Palace
+Tower Bridge
+Leaning Tower of Pisa
+Sistine Chapel
+Sagrada Família
+Kremlin
+Berlin Wall
+Statue of Liberty
+Empire State Building
+Golden Gate Bridge
+White House
+Pentagon
+Alcatraz
+Area 51
+Mount Rushmore
+Disneyland
+Sydney Opera House
+Burj Khalifa
+Panama Canal
+Suez Canal
+Chernobyl
+Bermuda Triangle
+Atlantis
+El Dorado
+North Pole
+Equator
+Moon
+Mars
+Airport
+Hospital
+Library
+Museum
+Casino
+Cathedral
+Lighthouse
+Submarine
+Space Station
+Oil Rig
+Monastery
+Vineyard
+Circus
+Prison
+Embassy
+Zoo
+Aquarium
+Stadium
+Ski Resort
+Cruise Ship
+Desert Island
+Rainforest
+Glacier
+Volcano
+Swamp
+Cave
+Coral Reef
+Oasis
+Fjord
+Canyon

@@ -9,7 +9,6 @@
   <style>
     .rules { max-width: 44rem; margin: 0 auto; padding: 24px 16px 64px; }
     .rules header { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.5rem; }
-    .rules header img { border-radius: 14px; box-shadow: var(--shadow); }
     .rules h1 { font-family: var(--font-display); font-size: 2.2rem; }
     .rules h2 {
       font-family: var(--font-display); font-size: 1.45rem; text-transform: none; letter-spacing: 0;
@@ -20,12 +19,12 @@
     .steps { list-style: none; padding: 0; display: grid; gap: 12px; counter-reset: step; }
     .steps > li {
       counter-increment: step; position: relative;
-      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 1rem 1rem 1rem 3.4rem; box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--line);
+      padding: 1rem 1rem 1rem 3.4rem;
     }
     .steps > li::before {
       content: counter(step); position: absolute; left: 1rem; top: 1rem;
-      width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+      width: 1.7rem; height: 1.7rem; display: grid; place-items: center;
       background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 0.9rem;
     }
     .steps p { margin: 0.4rem 0 0; }
@@ -37,7 +36,7 @@
     th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
     th { color: var(--muted); font-weight: 600; white-space: nowrap; }
     .callout {
-      background: var(--gold-soft); border-radius: var(--radius); padding: 1rem 1.1rem; margin: 1.5rem 0;
+      background: var(--gold-soft); padding: 1rem 1.1rem; margin: 1.5rem 0;
       border: 1px solid color-mix(in srgb, var(--gold), transparent 60%);
     }
     .back { display: inline-block; margin-top: 2rem; }
@@ -46,7 +45,13 @@
 <body>
 <main class="rules">
   <header>
-    <img src="logo.svg" alt="" width="56" height="56">
+    <svg class="rules-logo" viewBox="0 0 64 64" width="56" height="56" aria-hidden="true">
+      <rect width="64" height="64" fill="var(--accent)"/>
+      <path d="M32 6v10" stroke="#f0c35a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M33 6.5l9 3-9 3z" fill="#f0c35a"/>
+      <path d="M14 54V26h6v5h5v-5h4v5h6v-5h4v5h5v-5h6v28H38V44a6 6 0 0 0-12 0v10z" fill="#f5f2ec"/>
+      <path d="M19 38h4v5h-4zM41 38h4v5h-4z" fill="var(--accent)"/>
+    </svg>
     <h1>How to play</h1>
   </header>
 
@@ -137,36 +142,6 @@
   <p>
     The app doesn’t track declarations or scores. Everyone’s words are revealed when the next round starts, and
     players work out who won themselves. Most groups just play round after round until they’re tired.
-  </p>
-
-  <h2>Strategy</h2>
-  <p>
-    Give clues about your word that your teammates will recognise when they try them against their own word, but
-    that aren’t so obvious your opponents can pick your word out of the other 17 or so. Castlefall is all about
-    that balance.
-  </p>
-  <p>
-    You can react to clues you don’t actually recognise, to make people think you’re on their team. You can also
-    give clues about other words, such as ones you suspect belong to the other team, and watch who reacts. The
-    risk is that someone takes that other word for your real word and declares on it. That someone may or may
-    not be on your team.
-  </p>
-  <p class="muted">
-    Tip: in the app, tap words to cross them out and tap players to mark them ✓ or ✗. These notes stay on
-    your device only.
-  </p>
-
-  <h2>Variants</h2>
-  <p>
-    Words can be replaced by any finite set of objects you can tell apart, such as Dixit cards. Use a word list
-    of numbers and match them to cards yourselves.
-  </p>
-
-  <h2>Trust</h2>
-  <p>
-    The app is built for friends who trust each other, so there are no access controls. Anyone in a room can
-    remove anyone else. If you join with the same name as someone in the current round, you take over their
-    seat and see their word. That’s how you rejoin after your phone disconnects.
   </p>
 
   <a class="btn btn-primary back" href="./">← Back to the game</a>

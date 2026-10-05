@@ -265,15 +265,11 @@ $("#join-form").addEventListener("submit", (event) => {
   if (!name) {
     $("#join-name").focus();
     $("#join-error").hidden = false;
-    $("#join-error").textContent = "Pick a name so others know who you are — or choose “Just watch”.";
+    $("#join-error").textContent = "Pick a name so others know who you are.";
     return;
   }
   store.set("name", name);
   connect(cleanRoom($("#join-room").value), name);
-});
-
-$("#join-spectate").addEventListener("click", () => {
-  connect(cleanRoom($("#join-room").value), null);
 });
 
 $("#leave-room").addEventListener("click", () => {
@@ -489,7 +485,7 @@ function wordCard(round) {
     { class: "word-card spectating" },
     h("span", { class: "label" }, "Spectating"),
     h("span", { class: "word-big", style: "font-size: 1.4rem" }, "You’re watching this room"),
-    h("button", { class: "btn btn-primary btn-sm", onclick: () => showJoin() }, "Join as a player"),
+    h("button", { class: "btn btn-primary btn-sm", onclick: () => setSpectating(false) }, "Join as a player"),
   );
 }
 
@@ -510,6 +506,9 @@ function renderStart() {
 
   const disabled = !isPlayer();
   for (const el of $("#start-form").querySelectorAll("button, input, select")) el.disabled = disabled;
+  wheel.classList.toggle("disabled", disabled);
+  wheel.tabIndex = disabled ? -1 : 0;
+  syncWheel();
 
   const confirming = Date.now() < state.confirmStartUntil;
   const next = (state.round?.number ?? 0) + 1;
@@ -531,18 +530,90 @@ function renderStart() {
         : `${players} players here. Everyone in the room gets a word.`;
 }
 
-$("#start-count").value = store.get("count", 18);
+// Word count wheel: a snap-scrolling column of numbers; whichever sits in the middle is the count.
+const COUNT_MIN = 2;
+const COUNT_MAX = 100;
+const wheel = $("#start-count");
+let wordCount = Math.min(COUNT_MAX, Math.max(COUNT_MIN, Number(store.get("count", 18)) || 18));
+for (let n = COUNT_MIN; n <= COUNT_MAX; n++) wheel.append(h("div", {}, String(n)));
+wheel.setAttribute("aria-valuemin", COUNT_MIN);
+wheel.setAttribute("aria-valuemax", COUNT_MAX);
 
-$("#start-form").addEventListener("click", (event) => {
-  const step = event.target.closest("[data-step]");
-  if (!step) return;
-  const input = $("#start-count");
-  input.value = Math.max(2, (parseInt(input.value, 10) || 18) + Number(step.dataset.step));
-  store.set("count", Number(input.value));
+function markWheel() {
+  [...wheel.children].forEach((el, i) => el.classList.toggle("on", i === wordCount - COUNT_MIN));
+  wheel.setAttribute("aria-valuenow", wordCount);
+}
+
+/** Scroll the wheel to the current count. Does nothing while the wheel is hidden or already there. */
+function syncWheel(smooth = false) {
+  const row = wheel.firstElementChild.offsetHeight;
+  if (!row) return;
+  const index = wordCount - COUNT_MIN;
+  if (Math.round(wheel.scrollTop / row) !== index) {
+    wheel.scrollTo({ top: index * row, behavior: smooth ? "smooth" : "instant" });
+  }
+}
+
+function setCount(n) {
+  wordCount = Math.min(COUNT_MAX, Math.max(COUNT_MIN, n));
+  store.set("count", wordCount);
+  markWheel();
+}
+
+markWheel();
+wheel.addEventListener("scroll", () => {
+  const row = wheel.firstElementChild.offsetHeight;
+  if (!row) return;
+  const n = COUNT_MIN + Math.round(wheel.scrollTop / row);
+  if (n !== wordCount) setCount(n);
 });
-$("#start-count").addEventListener("input", (event) => {
-  event.target.value = event.target.value.replace(/\D/g, "").slice(0, 3);
-  store.set("count", Number(event.target.value) || 18);
+wheel.addEventListener("click", (event) => {
+  const index = [...wheel.children].indexOf(event.target);
+  if (index < 0) return;
+  if (index === wordCount - COUNT_MIN) editCount();
+  else wheel.scrollTo({ top: index * event.target.offsetHeight, behavior: "smooth" });
+});
+wheel.addEventListener("keydown", (event) => {
+  if (/^\d$/.test(event.key)) {
+    event.preventDefault();
+    return editCount(event.key);
+  }
+  const step = { ArrowUp: -1, ArrowDown: 1 }[event.key];
+  if (!step) return;
+  event.preventDefault();
+  setCount(wordCount + step);
+  syncWheel();
+});
+
+// Typing a count: an input laid over the middle row of the wheel.
+const countInput = $("#count-input");
+
+function editCount(initial) {
+  countInput.value = initial ?? wordCount;
+  countInput.hidden = false;
+  countInput.focus();
+  if (initial == null) countInput.select();
+}
+
+function closeCountInput(commit) {
+  if (countInput.hidden) return;
+  const n = parseInt(countInput.value, 10);
+  countInput.hidden = true;
+  if (commit && n) {
+    setCount(n);
+    syncWheel();
+  }
+}
+
+countInput.addEventListener("input", () => {
+  countInput.value = countInput.value.replace(/\D/g, "").slice(0, 3);
+});
+countInput.addEventListener("blur", () => closeCountInput(true));
+countInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== "Escape") return;
+  event.preventDefault();
+  closeCountInput(event.key === "Enter");
+  wheel.focus();
 });
 $("#start-list").addEventListener("change", (event) => store.set("list", event.target.value));
 
@@ -560,7 +631,7 @@ $("#start-form").addEventListener("submit", (event) => {
     type: "start",
     round: state.round?.number ?? 0,
     wordlist: $("#start-list").value,
-    wordcount: Number($("#start-count").value) || 18,
+    wordcount: wordCount,
   });
   renderStart();
 });
@@ -631,12 +702,22 @@ function renderSettings() {
   select.value = state.settings.timerLength;
   select.disabled = !isPlayer();
   $("#timer-start").disabled = !isPlayer();
+  $("#spectate").checked = !state.name;
+  $("#spectate").disabled = !state.connected;
   $("#autokick").checked = state.settings.autokick;
   $("#autokick").disabled = !isPlayer();
   $("#sound").checked = state.sound;
 }
 
 $("#timer-length").addEventListener("change", (e) => send({ type: "settings", timerLength: Number(e.target.value) }));
+/** Switch between playing and watching by rejoining the room with or without a name. */
+function setSpectating(spectating) {
+  const name = spectating ? null : store.get("name", "");
+  if (!spectating && !name) return showJoin();
+  if (!send({ type: "join", room: state.room, name })) renderSettings();
+}
+
+$("#spectate").addEventListener("change", (e) => setSpectating(e.target.checked));
 $("#autokick").addEventListener("change", (e) => send({ type: "settings", autokick: e.target.checked }));
 $("#sound").addEventListener("change", (e) => {
   state.sound = e.target.checked;

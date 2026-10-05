@@ -32,15 +32,15 @@ dependency is `ws`. Behind a reverse proxy, forward `/ws` with WebSocket upgrade
 
 ## What's new compared to the original
 
-- **Proper join screen**: name and room fields replace browser `prompt()`s, with a "just watch" option and your name remembered.
-- **Built for phones**: a large word card you tap to hide or reveal, a word grid with big tap targets, and a one-column layout that puts your word first.
+- **Proper join screen**: name and room fields replace browser `prompt()`s, with your name remembered. A checkbox in the room switches you to just watching.
+- **Built for phones**: a large word card you tap to hide or reveal, a plain word list you can tap, and a one-column layout that puts your word first.
 - **Private notes**: tap words to cross them out and tap players to mark them ✓ teammate or ✗ rival. Notes stay on your device and survive a refresh.
 - **Shared timer**: a sticky countdown banner for everyone, with a warning colour, optional beeps and vibration, and a stop button. Lengths run from 30s to 2 min.
 - **Reveal**: when the next round starts, the previous round's teams appear side by side with your team marked. Older rounds are in a collapsible history.
 - **Resilient connection**: automatic reconnect with backoff, and a page refresh drops you back into your seat with the same word.
 - **Safer "next round"**: starting a new round mid-game takes a second tap.
-- **Dark mode**, accessible focus states and reduced-motion support.
-- **Word lists**: `things` (369 concrete, clue-friendly nouns written for this project) plus EFF's short diceware list.
+- Accessible focus states and reduced-motion support.
+- **Word lists**: `things`, `codenames-style`, `movies`, `places`, `concepts`, `famous-figures` and `numbers` (1–999), all written for this project, plus EFF's short diceware list.
 
 ## Word lists
 
