@@ -143,3 +143,13 @@ test("serves the app and blocks path traversal", async () => {
   const evil = await fetch(`${base}/..%2fserver.js`);
   assert.notEqual(evil.status, 200);
 });
+
+test("static files are compressed and revalidate with an etag", async () => {
+  const base = url.replace("ws://", "http://").replace("/ws", "");
+  const first = await fetch(`${base}/app.js`, { headers: { "accept-encoding": "br" } });
+  assert.equal(first.status, 200);
+  assert.equal(first.headers.get("content-encoding"), "br");
+  assert.match(await first.text(), /WebSocket/);
+  const again = await fetch(`${base}/app.js`, { headers: { "if-none-match": first.headers.get("etag") } });
+  assert.equal(again.status, 304);
+});

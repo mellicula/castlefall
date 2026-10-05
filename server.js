@@ -3,6 +3,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
 
@@ -397,6 +398,29 @@ const MIME = {
   ".webmanifest": "application/manifest+json",
 };
 
+const COMPRESSIBLE = new Set([".html", ".js", ".css", ".svg", ".json", ".webmanifest"]);
+/** file path -> { etag, raw, br, gzip }, rebuilt when the file changes */
+const staticCache = new Map();
+
+function loadStatic(file, callback) {
+  fs.stat(file, (statErr, stat) => {
+    if (statErr || !stat.isFile()) return callback(statErr || new Error("Not a file"));
+    const etag = `"${stat.size.toString(36)}-${Math.round(stat.mtimeMs).toString(36)}"`;
+    const cached = staticCache.get(file);
+    if (cached?.etag === etag) return callback(null, cached);
+    fs.readFile(file, (readErr, raw) => {
+      if (readErr) return callback(readErr);
+      const entry = { etag, raw };
+      if (COMPRESSIBLE.has(path.extname(file))) {
+        entry.br = zlib.brotliCompressSync(raw);
+        entry.gzip = zlib.gzipSync(raw);
+      }
+      staticCache.set(file, entry);
+      callback(null, entry);
+    });
+  });
+}
+
 function serveStatic(req, res) {
   const url = new URL(req.url, "http://localhost");
   let pathname = decodeURIComponent(url.pathname);
@@ -406,16 +430,23 @@ function serveStatic(req, res) {
     res.writeHead(403).end();
     return;
   }
-  fs.readFile(file, (err, data) => {
+  loadStatic(file, (err, entry) => {
     if (err) {
       res.writeHead(404, { "content-type": "text/plain" }).end("Not found");
       return;
     }
-    res.writeHead(200, {
-      "content-type": MIME[path.extname(file)] || "application/octet-stream",
-      "cache-control": "no-cache",
-    });
-    res.end(data);
+    // Browsers revalidate every load, so an unchanged file costs one small 304.
+    const headers = { "cache-control": "no-cache", etag: entry.etag, vary: "accept-encoding" };
+    if (req.headers["if-none-match"] === entry.etag) {
+      res.writeHead(304, headers).end();
+      return;
+    }
+    const accepts = String(req.headers["accept-encoding"] || "");
+    const encoding = entry.br && /\bbr\b/.test(accepts) ? "br" : entry.gzip && /\bgzip\b/.test(accepts) ? "gzip" : null;
+    if (encoding) headers["content-encoding"] = encoding;
+    headers["content-type"] = MIME[path.extname(file)] || "application/octet-stream";
+    res.writeHead(200, headers);
+    res.end(encoding ? entry[encoding] : entry.raw);
   });
 }
 
