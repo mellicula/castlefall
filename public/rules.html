@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to play · Castlefall</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .rules { max-width: 44rem; margin: 0 auto; padding: 24px 16px 64px; }
+    .rules header { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.5rem; }
+    .rules header img { border-radius: 14px; box-shadow: var(--shadow); }
+    .rules h1 { font-family: var(--font-display); font-size: 2.2rem; }
+    .rules h2 {
+      font-family: var(--font-display); font-size: 1.45rem; text-transform: none; letter-spacing: 0;
+      color: var(--ink); margin: 2.2rem 0 0.6rem;
+    }
+    .rules p, .rules li { text-wrap: pretty; }
+    .rules .lede { font-size: 1.15rem; color: var(--muted); }
+    .steps { list-style: none; padding: 0; display: grid; gap: 12px; counter-reset: step; }
+    .steps > li {
+      counter-increment: step; position: relative;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 1rem 1rem 1rem 3.4rem; box-shadow: var(--shadow);
+    }
+    .steps > li::before {
+      content: counter(step); position: absolute; left: 1rem; top: 1rem;
+      width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center;
+      background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 0.9rem;
+    }
+    .steps p { margin: 0.4rem 0 0; }
+    .ways { display: grid; gap: 12px; }
+    @media (min-width: 640px) { .ways { grid-template-columns: 1fr 1fr; } }
+    .way h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .way p { margin: 0.5rem 0 0; font-size: 0.95rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.5rem; }
+    th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .callout {
+      background: var(--gold-soft); border-radius: var(--radius); padding: 1rem 1.1rem; margin: 1.5rem 0;
+      border: 1px solid color-mix(in srgb, var(--gold), transparent 60%);
+    }
+    .back { display: inline-block; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+<main class="rules">
+  <header>
+    <img src="logo.svg" alt="" width="56" height="56">
+    <h1>How to play</h1>
+  </header>
+
+  <p class="lede">
+    Castlefall (<a href="https://boardgamegeek.com/boardgame/25951/castle-devil">Castle of the Devil</a> +
+    <a href="https://boardgamegeek.com/boardgame/166384/spyfall">Spyfall</a>) is a party word game for about six to ten
+    people. An even number is best. It’s playable with a few more, somewhat playable with four or five, and playable
+    in some theoretical sense with three.
+  </p>
+  <p>
+    It was invented in 2017 by some folks at <a href="http://web.mit.edu/thetans/www/">Epsilon Theta</a>, an
+    independent living group at MIT. Everyone uses the app for words, but the talking happens out loud, in person.
+  </p>
+
+  <h2>Setup</h2>
+  <ol class="steps">
+    <li>
+      <strong>Everyone joins the same room.</strong>
+      <p>Share the room link (tap the room name at the top of the game). There’s no list of rooms, so you need the link or the room’s name.</p>
+    </li>
+    <li>
+      <strong>Someone starts a round.</strong>
+      <p>
+        Everyone sees the same list of about 18 words, shuffled differently on each device. Each player also gets
+        one of those words as <em>their word</em>. Players are secretly split into two teams of equal size (or
+        nearly equal): everyone on a team has the same word, and the two teams have different words.
+      </p>
+    </li>
+    <li>
+      <strong>Talk.</strong>
+      <p>
+        Figure out who is on your team, or what the other team’s word is, without giving your own word away.
+        Don’t look at anyone else’s screen. If someone asks you to repeat something, it’s polite to do so, and
+        polite to avoid excessive cryptography.
+      </p>
+    </li>
+  </ol>
+
+  <h2>Declaring victory</h2>
+  <p>
+    Talking continues until somebody <strong>declares victory</strong>, usually by clapping loudly, since the first
+    declaration takes priority. There are two ways to declare:
+  </p>
+
+  <div class="ways">
+    <section class="card way">
+      <h3>1 · Name your team</h3>
+      <p>
+        Name <strong>N</strong> players, yourself included, and claim they are all on your team.
+        <em>Nobody else can declare this way after you.</em>
+      </p>
+      <p>
+        Start the one-minute timer in the app. Keep talking. If nobody guesses a word (method 2) before
+        time runs out, your team wins if and only if you were right.
+      </p>
+      <p class="muted">
+        While the timer runs, it’s polite to repeat the clues that led to the declaration, so the win comes from
+        good clues and not from overhearing something others missed.
+      </p>
+    </section>
+    <section class="card way">
+      <h3>2 · Guess their word</h3>
+      <p>
+        Say what you think the other team’s word is. The round ends immediately, even while a method 1 timer is
+        running. Your team wins if and only if the guess is right.
+      </p>
+      <p>
+        Anyone can do this during a method 1 timer, including the people who were named and even the person who
+        declared.
+      </p>
+    </section>
+  </div>
+
+  <h3 style="margin-top: 1.5rem">Suggested N</h3>
+  <table>
+    <tr><th>6 or fewer</th><td>N = the size of your team, so you must name your team exactly. With an odd number of players, you also have to guess whether you’re on the smaller or larger team.</td></tr>
+    <tr><th>7 players</th><td>N = 3 for an easier game, or the size of your team for a harder one.</td></tr>
+    <tr><th>8 players</th><td>N = 3</td></tr>
+    <tr><th>9 players</th><td>N = 4, or name 5 people including yourself, of whom 4 must be on your team.</td></tr>
+    <tr><th>10 players</th><td>N = 4</td></tr>
+  </table>
+
+  <div class="callout">
+    No matter who declared, which method they used, or whether it worked,
+    <strong>you win or lose together with your team</strong>: the people who had the same word as you.
+  </div>
+
+  <p>
+    The app doesn’t track declarations or scores. Everyone’s words are revealed when the next round starts, and
+    players work out who won themselves. Most groups just play round after round until they’re tired.
+  </p>
+
+  <h2>Strategy</h2>
+  <p>
+    Give clues about your word that your teammates will recognise when they try them against their own word, but
+    that aren’t so obvious your opponents can pick your word out of the other 17 or so. Castlefall is all about
+    that balance.
+  </p>
+  <p>
+    You can react to clues you don’t actually recognise, to make people think you’re on their team. You can also
+    give clues about other words, such as ones you suspect belong to the other team, and watch who reacts. The
+    risk is that someone takes that other word for your real word and declares on it. That someone may or may
+    not be on your team.
+  </p>
+  <p class="muted">
+    Tip: in the app, tap words to cross them out and tap players to mark them ✓ or ✗. These notes stay on
+    your device only.
+  </p>
+
+  <h2>Variants</h2>
+  <p>
+    Words can be replaced by any finite set of objects you can tell apart, such as Dixit cards. Use a word list
+    of numbers and match them to cards yourselves.
+  </p>
+
+  <h2>Trust</h2>
+  <p>
+    The app is built for friends who trust each other, so there are no access controls. Anyone in a room can
+    remove anyone else. If you join with the same name as someone in the current round, you take over their
+    seat and see their word. That’s how you rejoin after your phone disconnects.
+  </p>
+
+  <a class="btn btn-primary back" href="./">← Back to the game</a>
+</main>
+</body>
+</html>

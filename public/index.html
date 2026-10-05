@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Castlefall — a party word game of hidden teams.">
+  <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121119" media="(prefers-color-scheme: dark)">
+  <title>Castlefall</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <!-- Join screen -->
+  <main id="join-screen" class="join" hidden>
+    <div class="join-card">
+      <img class="join-logo" src="logo.svg" alt="" width="72" height="72">
+      <h1>Castlefall</h1>
+      <p class="tagline">Two teams. Two secret words. Nobody knows who’s with them.</p>
+
+      <p id="join-error" class="join-error" role="alert" hidden></p>
+
+      <form id="join-form" class="stack" autocomplete="off">
+        <label class="field">
+          <span>Your name</span>
+          <input id="join-name" name="name" maxlength="24" placeholder="e.g. Morgan" autocomplete="nickname" autofocus>
+        </label>
+        <label class="field">
+          <span>Room</span>
+          <div class="input-prefix">
+            <span aria-hidden="true">#</span>
+            <input id="join-room" name="room" maxlength="40" placeholder="lobby" autocapitalize="off" spellcheck="false">
+          </div>
+        </label>
+        <button class="btn btn-primary btn-lg" type="submit">Join game</button>
+        <button class="btn btn-ghost" type="button" id="join-spectate">Just watch</button>
+      </form>
+
+      <p class="join-foot">
+        Everyone joins the same room, usually while sitting together in person.
+        <a href="rules.html" target="_blank" rel="noopener">How to play →</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- Game screen -->
+  <div id="game-screen" class="app" hidden>
+    <header class="topbar">
+      <a class="brand" href="rules.html" target="_blank" rel="noopener" title="How to play">
+        <img src="logo.svg" alt="" width="28" height="28">
+        <span>Castlefall</span>
+      </a>
+      <button class="room-pill" id="share-room" title="Copy invite link">
+        <span class="conn-dot" id="conn-dot" aria-hidden="true"></span>
+        <span id="room-name">#lobby</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>
+        <span class="sr-only">Copy invite link</span>
+      </button>
+      <div class="topbar-end">
+        <span class="you" id="you-label"></span>
+        <button class="btn btn-ghost btn-sm" id="leave-room">Change room</button>
+      </div>
+    </header>
+
+    <div class="timer-banner" id="timer-banner" hidden>
+      <div class="timer-fill" id="timer-fill"></div>
+      <div class="timer-content">
+        <span class="timer-num" id="timer-num">60</span>
+        <span class="timer-label" id="timer-label">timer</span>
+        <button class="btn btn-sm btn-quiet" id="timer-stop">Stop</button>
+      </div>
+    </div>
+
+    <div class="status-banner" id="status-banner" role="status" hidden></div>
+
+    <div class="layout">
+      <section class="main-col">
+        <div id="round-area"></div>
+
+        <section class="card" id="new-round">
+          <form id="start-form" class="start-form">
+            <div class="start-options">
+              <label class="field field-inline">
+                <span>Words</span>
+                <div class="stepper">
+                  <button type="button" data-step="-1" aria-label="Fewer words">−</button>
+                  <input id="start-count" inputmode="numeric" value="18" aria-label="Number of words">
+                  <button type="button" data-step="1" aria-label="More words">+</button>
+                </div>
+              </label>
+              <label class="field field-inline grow">
+                <span>From list</span>
+                <select id="start-list"></select>
+              </label>
+            </div>
+            <button class="btn btn-primary btn-lg" id="start-btn" type="submit">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              <span id="start-label">Start round</span>
+            </button>
+          </form>
+          <p class="hint" id="start-hint"></p>
+        </section>
+
+        <div id="reveal-area"></div>
+        <div id="history-area"></div>
+      </section>
+
+      <aside class="side-col">
+        <section class="card" id="timer-card">
+          <div class="card-head">
+            <h2>Timer</h2>
+            <label class="select-sm">
+              <span class="sr-only">Timer length</span>
+              <select id="timer-length"></select>
+            </label>
+          </div>
+          <button class="btn btn-accent btn-block" id="timer-start">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>
+            <span>Start timer for everyone</span>
+          </button>
+          <p class="hint">Use it when someone names their team.</p>
+        </section>
+
+        <section class="card chat-card" id="chat-card">
+          <div class="card-head"><h2>Activity</h2></div>
+          <ol class="log" id="log" aria-live="polite"></ol>
+          <form id="chat-form" class="chat-form" autocomplete="off">
+            <input id="chat-input" maxlength="300" placeholder="Say something…" aria-label="Chat message">
+            <button class="btn btn-icon" type="submit" aria-label="Send">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </form>
+        </section>
+
+        <section class="card" id="room-card">
+          <div class="card-head">
+            <h2>In the room</h2>
+            <span class="muted" id="room-count"></span>
+          </div>
+          <ul class="roster" id="roster"></ul>
+          <p class="muted small" id="spectator-count"></p>
+          <label class="toggle">
+            <input type="checkbox" id="autokick">
+            <span>Remove players when they disconnect</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="sound">
+            <span>Timer sounds on this device</span>
+          </label>
+        </section>
+
+        <p class="footer muted small">
+          <a href="rules.html" target="_blank" rel="noopener">Rules</a> ·
+          <a href="https://github.com/betaveros/castlefall" target="_blank" rel="noopener">Original by betaveros</a> ·
+          <span id="version"></span>
+        </p>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
